@@ -8,14 +8,25 @@
     <p class="text-center">
       <span><a href="{% url 'photo:update' photo.id %}" class="text-primary px-2">Update</a></span>
       <span><a href="{% url 'photo:delete' photo.id %}" class="text-danger px-2">Delete</a></span>
-    </p>
   {% endif %}
+    {% if count_submitter_photos >= 3%}
+      <span><a href="{{photo.image.url}}" class="text-success px-2" target="_blank">Download</a></span>
+    {%else%}
+     <p>You can't download fullsize image. You must upload at least 3 photos.</p>
+    {%endif%}
+    </p>
 </div>
 <div class="row pb-5">
   <div class="col-md-8">
+  {% if user.is_authenticated %}
+    {% thumbnail photo.image "500x500" crop="center" as im %}
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+  {% endthumbnail %}
+{%else%}
     {% thumbnail photo.image "500x500" crop="center" as im %}
     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"oncontextmenu="return false;">
 {% endthumbnail %}
+{%endif%}
   </div>
   <div class="col-md-4">
     <h4>More about this photo:</h4>

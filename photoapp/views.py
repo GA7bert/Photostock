@@ -47,6 +47,14 @@ class PhotoDetailView(DetailView):
 
     context_object_name = 'photo'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            user_photos = Photo.objects.filter(submitter=self.request.user)
+            context['submitter_photos'] = user_photos
+            context['count_submitter_photos'] = user_photos.count()
+        return context
+
 class PhotoCreateView(LoginRequiredMixin, CreateView):
 
     model = Photo
